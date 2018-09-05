@@ -62,3 +62,6 @@ typings/
 
 # build output
 .build
+
+# mac
+.DS_Store
