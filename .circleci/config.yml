@@ -11,6 +11,9 @@ jobs:
       - run:
           name: Lint
           command: yarn lint
+      - run:
+          name: Build
+          command: yarn build
 workflows:
   version: 2
   main:
