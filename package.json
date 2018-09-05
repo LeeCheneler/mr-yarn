@@ -4,8 +4,14 @@
   "repository": "git@github.com:leecheneler/mr-yarn.git",
   "author": "leecheneler",
   "license": "MIT",
+  "bin": {
+    "mr": "./.scripts/cli.js"
+  },
   "scripts": {
     "build": "tsc",
+    "clean": "yarn clean:build && yarn clean:node_modules",
+    "clean:build": "rm -rf .build",
+    "clean:node_modules": "rm -rf node_modules",
     "dev": "nodemon --ext ts --watch src .scripts/dev.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },

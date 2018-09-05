@@ -20,6 +20,7 @@ const runCommand = async command => {
  * Run dev script, build then relink the package
  */
 const run = async () => {
+  await runCommand('yarn clean:build')
   await runCommand('yarn build')
   try {
     await runCommand('yarn unlink')
