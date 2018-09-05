@@ -1,6 +1,7 @@
+/**
+ * Import colors before everything as it extends string.prototype
+ */
 import 'colors'
-import { defaultLogger } from './logger'
+import * as yargs from 'yargs'
 
-export const run = () => {
-  defaultLogger.info('Hello world!'.random)
-}
+export const run = () => yargs.help().argv
