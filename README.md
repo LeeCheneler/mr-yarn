@@ -4,7 +4,7 @@
 
 Yarn mono repo utility.
 
-## Getting Started
+## Getting Started
 
 ```
 yarn add https://github.com/LeeCheneler/mr-yarn
