@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:carbon
+    steps:
+      - checkout
+      - run:
+          name: Bootstrap
+          command: yarn
+      - run:
+          name: Lint
+          command: yarn lint
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build
