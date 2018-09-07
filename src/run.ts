@@ -3,5 +3,9 @@
  */
 import 'colors'
 import * as yargs from 'yargs'
+import { defaultLogger } from './logger'
 
-export const run = () => yargs.help().argv
+export const run = () => {
+  defaultLogger.info('testing...')
+  yargs.help().argv // tslint:disable-line
+}
