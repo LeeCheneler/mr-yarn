@@ -1,24 +1,34 @@
-import * as fs from 'fs-extra'
 import * as yargs from 'yargs'
-import { assertWorkspaceConfig } from './assert'
+import { applyAddCommand } from './commands/add'
 import { defaultLogger } from './logger'
 
-interface IRunOptions {
-  workspacesConfigFilePath: string
+export interface IRunOptions {
+  configFilename: string
+  cwd: string
 }
 
-export const run = async ({ workspacesConfigFilePath }: IRunOptions) => {
+export const run = async ({ configFilename, cwd }: IRunOptions) => {
   try {
     /**
-     * Validate Yarn Workspaces config first and foremost as this tool requires it
+     * Configure global switches
      */
-    const workspacesConfig = await fs.readJson(workspacesConfigFilePath)
-    assertWorkspaceConfig(workspacesConfig)
+    let yargv = yargs.option('w', {
+      alias: 'workspaces',
+      describe: 'Filter by workspace names. Defaults to all when option not present.'
+    })
 
     /**
-     * Initiate the CLI
+     * Apply commands
      */
-    yargs.help().version().argv // tslint:disable-line
+    yargv = applyAddCommand(yargv, { configFilename, cwd })
+
+    /**
+     * Run CLI
+     */
+    yargv
+      .help()
+      .version()
+      .parse()
   } catch (error) {
     defaultLogger.error(error)
   }

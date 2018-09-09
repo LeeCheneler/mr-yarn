@@ -7,10 +7,7 @@ const ogConsole = global.console
 beforeEach(() => {
   global.console = {
     ...global.console,
-    error: jest.fn(),
-    info: jest.fn(),
-    log: jest.fn(),
-    warn: jest.fn()
+    log: jest.fn()
   }
 })
 

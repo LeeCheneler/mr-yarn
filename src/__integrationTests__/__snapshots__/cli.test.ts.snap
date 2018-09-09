@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should print help 1`] = `
+"mr [command]
+
+Commands:
+  mr add [packages...]  Add packages to workspaces
+
+Options:
+  -w, --workspaces  Filter by workspace names. Defaults to all when option not
+                    present.
+  --help            Show help                                          [boolean]
+  --version         Show version number                                [boolean]
+"
+`;
+
+exports[`Should print version 1`] = `
+"1.0.0-alhpa.1
+"
+`;

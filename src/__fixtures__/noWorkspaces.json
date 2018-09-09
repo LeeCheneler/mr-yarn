@@ -1,5 +1,5 @@
 {
-  "name": "valid",
+  "name": "no-workspaces",
   "private": true,
   "workspaces": ["workspaces/*"]
 }

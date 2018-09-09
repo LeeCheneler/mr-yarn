@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should print an errors 1`] = `
+"[35mMr Yarn[39m [31merror[39m: Missing { \\"private\\": false } in 'package.json'
+"
+`;

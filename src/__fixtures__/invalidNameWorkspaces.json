@@ -1,0 +1,5 @@
+{
+  "name": "invalid-name-workspaces",
+  "private": true,
+  "workspaces": ["invalidNameWorkspaces/*"]
+}

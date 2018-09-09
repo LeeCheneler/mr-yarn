@@ -1,0 +1,7 @@
+{
+  "name": "clean",
+  "private": true,
+  "workspaces": [
+    "workspaces/*"
+  ]
+}

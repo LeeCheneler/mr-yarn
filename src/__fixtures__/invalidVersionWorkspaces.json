@@ -1,0 +1,5 @@
+{
+  "name": "invalid-version-workspaces",
+  "private": true,
+  "workspaces": ["invalidVersionWorkspaces/*"]
+}
