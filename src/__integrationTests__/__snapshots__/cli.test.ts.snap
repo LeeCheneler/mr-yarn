@@ -4,7 +4,8 @@ exports[`Should print help 1`] = `
 "mr [command]
 
 Commands:
-  mr add [packages...]  Add packages to workspaces
+  mr add [packages...]          Add packages to workspaces
+  mr run <script> [options...]  Run NPM script in workspaces
 
 Options:
   -w, --workspaces  Filter by workspace names. Defaults to all when option not

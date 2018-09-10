@@ -10,7 +10,7 @@ const fixturesDir = resolve(process.cwd(), 'src/__integrationFixtures__')
 /**
  * Create a bootstrap a temporary working directory
  */
-const cwd = resolve(fixturesDir, 'temp')
+const cwd = resolve(fixturesDir, 'add-temp')
 
 beforeEach(async () => {
   await copy(resolve(fixturesDir, 'clean'), cwd)

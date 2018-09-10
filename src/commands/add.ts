@@ -45,6 +45,8 @@ export const add = async (options: IAddOptions) => {
       options.workspaceSwitch ? options.workspaceSwitch.split(',') : []
     )
 
+    defaultLogger.info(`Target workspaces [${targetWorkspaces.map(w => `'${w.name}'`).join(',')}]`)
+
     /**
      *  Breakdown packages into meaningful parts
      */

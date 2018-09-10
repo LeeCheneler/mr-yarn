@@ -1,5 +1,9 @@
 {
   "name": "workspace-two",
   "version": "1.0.0",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "hello": "echo 'hello from workspace-two'",
+    "world": "yarn hello"
+  }
 }
