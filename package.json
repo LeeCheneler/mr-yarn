@@ -17,6 +17,11 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint --fix && git update-index --again && yarn test"
+    }
+  },
   "dependencies": {
     "colors": "^1.3.2",
     "fs-extra": "^7.0.0",
@@ -31,6 +36,7 @@
     "@types/jest": "^23.3.1",
     "@types/node": "^10.9.4",
     "@types/yargs": "^11.1.1",
+    "husky": "^1.0.0-rc.14",
     "jest": "^23.5.0",
     "nodemon": "^1.18.4",
     "ts-jest": "^23.1.4",
