@@ -47,7 +47,7 @@ export const loadWorkspaces = async (dir: string, configFilename: string): Promi
   }
 
   if (config.private !== true) {
-    throw new Error(`Missing { "private": false } in '${configFilename}'`)
+    throw new Error(`Missing { "private": true } in '${configFilename}'`)
   }
 
   /**
