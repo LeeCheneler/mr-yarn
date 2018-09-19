@@ -75,3 +75,23 @@ mr run -w workspace-one start
 **Is Mr Yarn a replacement for Lerna?**
 
 Sort of... Lerna's scope is greater than that of Mr Yarn. This tool is more interested in making developers lives in mono repos easier. It isn't interested (right now 😛) in publishing et al.
+
+## Contributing
+
+Feel free to contribute via pull request!! 😃
+
+Getting the code up and running locally:
+
+```bash
+# Clone the repo
+git clone git@github.com:LeeCheneler/mr-yarn.git
+
+# Begin dev mode
+yarn dev
+
+# Run tests
+yarn test
+
+# Run tests in watch mode
+yarn test:watch
+```
