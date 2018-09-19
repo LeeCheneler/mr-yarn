@@ -1,0 +1,12 @@
+.circleci
+.scripts
+coverage
+node_modules
+src
+.gitignore
+.npmignore
+.prettierrc
+jest.config.js
+tsconfig.json
+tslint.json
+yarn-error.log
