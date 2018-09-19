@@ -36,7 +36,7 @@ describe('loadWorkspaces', () => {
 
   it('should throw if the mono repo is a public package', async () => {
     await expect(loadWorkspaces(fixturesDir, 'public.json')).rejects.toEqual(
-      new Error(`Missing { "private": false } in 'public.json'`)
+      new Error(`Missing { "private": true } in 'public.json'`)
     )
   })
 
