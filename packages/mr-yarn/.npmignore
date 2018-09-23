@@ -1,12 +1,11 @@
-.circleci
-.scripts
+# Folders
 coverage
 node_modules
 src
-.gitignore
+
+# Files
 .npmignore
-.prettierrc
 jest.config.js
 tsconfig.json
 tslint.json
-yarn-error.log
+*.log

@@ -1,47 +1,26 @@
 {
-  "name": "mr-yarn",
-  "version": "1.0.0-alpha.1",
-  "repository": "git@github.com:leecheneler/mr-yarn.git",
-  "author": "leecheneler",
-  "license": "MIT",
-  "bin": {
-    "mr": "./.bin/mr.js"
-  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "tsc",
-    "clean": "yarn clean:build && yarn clean:node_modules",
-    "clean:build": "rm -rf .build",
-    "clean:node_modules": "rm -rf node_modules",
-    "dev": "nodemon --ext ts --watch src .scripts/dev.js",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "build": "cd packages/mr-yarn && yarn build",
+    "clean": "yarn clean:build && yarn clean:coverage && yarn clean:node_modules",
+    "clean:build": "rm -rf packages/**/.build",
+    "clean:coverage": "rm -rf packages/**/coverage",
+    "clean:node_modules": "rm -rf packages/**/node_modules && rm -rf node_modules",
+    "lint": "tslint -c tslint.json 'packages/**/src/**/*.ts'",
+    "test": "mr run test"
   },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint --fix && git update-index --again && yarn test"
     }
   },
-  "dependencies": {
-    "colors": "^1.3.2",
-    "fs-extra": "^7.0.0",
-    "glob-promise": "^3.4.0",
-    "semver-regex": "^2.0.0",
-    "validate-npm-package-name": "^3.0.0",
-    "winston": "^3.1.0",
-    "yargs": "^12.0.1"
-  },
   "devDependencies": {
-    "@types/fs-extra": "^5.0.4",
-    "@types/jest": "^23.3.1",
-    "@types/node": "^10.9.4",
-    "@types/yargs": "^11.1.1",
     "husky": "^1.0.0-rc.14",
-    "jest": "^23.5.0",
-    "nodemon": "^1.18.4",
-    "ts-jest": "^23.1.4",
+    "mr-yarn": "^1.0.0-alpha.1",
     "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.3"
+    "tslint-config-prettier": "^1.15.0"
   }
 }

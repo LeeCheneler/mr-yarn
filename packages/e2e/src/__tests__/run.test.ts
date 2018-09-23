@@ -1,11 +1,11 @@
-import { copy, move, readJson, remove } from 'fs-extra'
+import { copy, move, remove } from 'fs-extra'
 import { resolve } from 'path'
-import { exec } from '../testUtils'
+import { exec } from '../utils'
 
 /**
  * Fixtures directory containing variants of workspace setup to assert against
  */
-const fixturesDir = resolve(process.cwd(), 'src/__integrationFixtures__')
+const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
 
 /**
  * Create a bootstrap a temporary working directory

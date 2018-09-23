@@ -1,10 +1,10 @@
 import { resolve } from 'path'
-import { exec } from '../testUtils'
+import { exec } from '../utils'
 
 /**
  * Fixtures directory containing variants of workspace setup to assert against
  */
-const fixturesDir = resolve(process.cwd(), 'src/__integrationFixtures__')
+const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
 const cwd = resolve(fixturesDir, 'valid')
 
 it('Should print version', async () => {

@@ -1,0 +1,17 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "link": "cd ../mr-yarn && yarn link && cd ../e2e",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@types/jest": "^23.3.1",
+    "fs-extra": "^7.0.0",
+    "jest": "^23.5.0",
+    "mr-yarn": "^1.0.0-alpha.1",
+    "ts-jest": "^23.1.4",
+    "typescript": "^3.0.3"
+  }
+}
