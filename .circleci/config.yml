@@ -16,9 +16,7 @@ jobs:
           command: yarn build
       - run:
           name: Test
-          command: |
-            yarn link
-            yarn test
+          command: yarn test
 workflows:
   version: 2
   main:
