@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "link": "cd ../mr-yarn && yarn link && cd ../e2e",
     "test": "jest --coverage"
   },
   "dependencies": {
