@@ -43,6 +43,18 @@ describe('defaultLogger', () => {
     expect(global.console.log).toHaveBeenCalledTimes(1)
     expect(global.console.log).toHaveBeenCalledWith(`${config.defaultPrefix} ${'warn'.yellow}: test`)
   })
+
+  it('should prefix multiple lines when logged', () => {
+    defaultLogger.info(`hello
+world
+test
+`)
+
+    expect(global.console.log).toHaveBeenCalledTimes(1)
+    expect(global.console.log).toHaveBeenCalledWith(`${config.defaultPrefix} ${'info'.green}: hello
+${config.defaultPrefix} ${'info'.green}: world
+${config.defaultPrefix} ${'info'.green}: test`)
+  })
 })
 
 describe('createLogger', () => {

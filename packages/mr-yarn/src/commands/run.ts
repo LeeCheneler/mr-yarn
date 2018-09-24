@@ -78,11 +78,11 @@ export const run = async (options: IRunOptions) => {
         const workspaceLogger = createLogger({ prefix: colors[getRandomColor()](`[${workspace.name}]`) })
 
         runner.stdout.on('data', data => {
-          workspaceLogger.info(data.toString().trim())
+          workspaceLogger.info(data.toString())
         })
 
         runner.stderr.on('data', data => {
-          workspaceLogger.error(data.toString().trim())
+          workspaceLogger.error(data.toString())
         })
 
         /**

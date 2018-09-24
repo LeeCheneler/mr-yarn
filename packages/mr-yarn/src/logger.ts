@@ -12,7 +12,17 @@ interface ICreateLoggerOptions {
  */
 export const createLogger = ({ prefix }: ICreateLoggerOptions): Logger =>
   createWinstonLogger({
-    format: format.combine(format.colorize(), format.printf(info => `${prefix} ${info.level}: ${info.message}`)),
+    format: format.combine(
+      format.colorize(),
+      format.printf(info => {
+        const lines = info.message
+          .split('\n')
+          .filter(l => l.length)
+          .map(l => `${prefix} ${info.level}: ${l}`)
+
+        return lines.join('\n').trim()
+      })
+    ),
     level: 'info',
     transports: [new transports.Console()]
   })
