@@ -29,6 +29,7 @@ describe('add command', () => {
   describe('validate packages to install', () => {
     it('should not perform an install if any packages are incorrectly formatted and should output invalid packages provided', async () => {
       const { stdout } = await exec('mr add deep-freeze react-dom@16.5.0 react@a16.5.0 excited! what:bad', { cwd })
+
       const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
       const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
 
@@ -50,6 +51,7 @@ describe('add command', () => {
 
     it('should add dev dependencies to all workspaces', async () => {
       await exec('mr add --dev deep-freeze', { cwd })
+
       const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
       const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
 
@@ -59,6 +61,7 @@ describe('add command', () => {
 
     it('should add dependencies to filtered workspaces', async () => {
       await exec('mr add deep-freeze --workspaces workspace-two', { cwd })
+
       const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
       const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
 
@@ -70,22 +73,40 @@ describe('add command', () => {
   describe('workspace packages', () => {
     it('should add workspaces as dependencies to all workspaces but themselves', async () => {
       await exec('mr add workspace-one', { cwd })
+
       const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
       const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
+
       expect(workspaceOne.dependencies).toBe(undefined)
       expect(workspaceTwo.dependencies['workspace-one']).toBeTruthy()
     })
+
     it('should add workspaces as dev dependencies to all workspaces but themselves', async () => {
       await exec('mr add --dev workspace-one', { cwd })
+
       const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
       const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
+
       expect(workspaceOne.devDependencies).toBe(undefined)
       expect(workspaceTwo.devDependencies['workspace-one']).toBeTruthy()
     })
+
     it('should add workspaces as dependencies to filtered workspaces', async () => {
       await exec('mr add --workspaces workspace-two workspace-one', { cwd })
       const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
+
       expect(workspaceTwo.dependencies['workspace-one']).toBeTruthy()
+    })
+  })
+
+  describe('adding existing packages', () => {
+    it('should update a package version', async () => {
+      await exec('mr add -w workspace-one react@15.4.1 ', { cwd })
+      await exec('mr add -w workspace-one react@16.5.0', { cwd })
+
+      const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
+
+      expect(workspaceOne.dependencies.react).toBe('16.5.0')
     })
   })
 })
