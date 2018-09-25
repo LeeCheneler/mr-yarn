@@ -107,14 +107,18 @@ export const add = async (options: IAddOptions) => {
      */
     if (npmPackages.length > 0) {
       for (const targetWorkspace of targetWorkspaces) {
-        await exec(
-          `yarn add ${npmPackages.map(({ atVersion, name }) => `'${name}${atVersion}'`).join(' ')} ${
-            options.dev ? '--dev' : ''
-          }`,
-          {
-            cwd: targetWorkspace.__workspaceDir
-          }
-        )
+        try {
+          await exec(
+            `yarn add ${npmPackages.map(({ atVersion, name }) => `'${name}${atVersion}'`).join(' ')} ${
+              options.dev ? '--dev' : ''
+            }`,
+            {
+              cwd: targetWorkspace.__workspaceDir
+            }
+          )
+        } catch (err) {
+          defaultLogger.warn(err)
+        }
       }
     }
 
@@ -122,12 +126,12 @@ export const add = async (options: IAddOptions) => {
      * Install workspace packages
      */
     if (workspacePackages.length > 0) {
+      /**
+       * Manually update each package.json file
+       * NOTE: only safe to do once all npm installs have been performed
+       */
       await Promise.all(
         targetWorkspaces.map(async targetWorkspace => {
-          /**
-           * Manually update each package.json file
-           * NOTE: only safe to do once all npm installs have been performed
-           */
           const packageJsonFilepath = resolve(targetWorkspace.__workspaceDir, 'package.json')
           const packageJson = await readJson(packageJsonFilepath)
           const dependencyKey = options.dev ? 'devDependencies' : 'dependencies'
@@ -147,13 +151,17 @@ export const add = async (options: IAddOptions) => {
           })
 
           await writeJson(packageJsonFilepath, packageJson, { spaces: 2 })
-
-          /**
-           * Now install
-           */
-          await exec('yarn install', { cwd: targetWorkspace.__workspaceDir })
         })
       )
+
+      /**
+       * Now install
+       */
+      try {
+        await exec('yarn install', { cwd: options.cwd })
+      } catch (err) {
+        defaultLogger.warn(err)
+      }
     }
 
     defaultLogger.info('Done 🎉')
