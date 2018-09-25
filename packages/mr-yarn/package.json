@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "yarn build && yarn test",
     "test": "jest --coverage"
   },
   "dependencies": {
