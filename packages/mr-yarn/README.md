@@ -7,7 +7,7 @@ Mr Yarn is a mono repository utility tool specifically for mono repositories pow
 ## Installation
 
 ```bash
-yarn add mr-yarn
+yarn global add mr-yarn
 ```
 
 ## Getting Started
