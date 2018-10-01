@@ -15,7 +15,7 @@ const cwd = resolve(fixturesDir, 'add-temp')
 beforeEach(async () => {
   await copy(resolve(fixturesDir, 'clean'), cwd)
   /**
-   * Clean mono repo doesn't contain a packahe.json because jest validates module names
+   * Clean mono repo doesn't contain a package.json because jest validates module names
    * and will log a warning if 2 match which they would following the first copy
    */
   await move(resolve(cwd, 'package.json.copyme'), resolve(cwd, 'package.json'))
