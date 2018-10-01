@@ -8,7 +8,7 @@ import { exec } from '../utils'
 const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
 
 /**
- * Create a bootstrap a temporary working directory
+ * Create a temporary working directory
  */
 const cwd = resolve(fixturesDir, 'add-temp')
 

@@ -65,3 +65,8 @@ typings/
 
 # mac
 .DS_Store
+
+# IDE specific
+.vscode
+.idea
+*.iml
