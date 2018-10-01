@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`remove command should remove an existing dependency from a specified workspace 1`] = `
+"[35mMr Yarn[39m [32minfo[39m: Target workspaces ['workspace-one']
+[35mMr Yarn[39m [32minfo[39m: Done 🎉
+"
+`;
+
+exports[`remove command should remove an existing dependency from all workspaces 1`] = `
+"[35mMr Yarn[39m [32minfo[39m: Target workspaces ['workspace-one','workspace-two']
+[35mMr Yarn[39m [32minfo[39m: Done 🎉
+"
+`;
+
+exports[`remove command should remove multiple existing dependencies 1`] = `
+"[35mMr Yarn[39m [32minfo[39m: Target workspaces ['workspace-one','workspace-two']
+[35mMr Yarn[39m [32minfo[39m: Done 🎉
+"
+`;

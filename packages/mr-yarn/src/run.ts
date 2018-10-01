@@ -1,5 +1,6 @@
 import * as yargs from 'yargs'
 import { applyAddCommand } from './commands/add'
+import { applyRemoveCommand } from './commands/remove'
 import { applyRunCommand } from './commands/run'
 import { defaultLogger } from './logger'
 
@@ -23,6 +24,7 @@ export const run = async ({ configFilename, cwd }: IRunOptions) => {
      */
     yargv = applyAddCommand(yargv, { configFilename, cwd })
     yargv = applyRunCommand(yargv, { configFilename, cwd })
+    yargv = applyRemoveCommand(yargv, { configFilename, cwd })
 
     /**
      * Run CLI

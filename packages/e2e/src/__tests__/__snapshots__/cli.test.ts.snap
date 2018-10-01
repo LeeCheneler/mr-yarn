@@ -6,6 +6,7 @@ exports[`Should print help 1`] = `
 Commands:
   mr add [packages...]          Add packages to workspaces
   mr run <script> [options...]  Run NPM script in workspaces
+  mr remove [packages...]       Remove packages from workspaces
 
 Options:
   -w, --workspaces  Filter by workspace names. Defaults to all when option not

@@ -14,7 +14,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint --fix && git update-index --again && yarn test"
+      "pre-commit": "yarn lint --fix && git update-index --again && yarn build && yarn test"
     }
   },
   "devDependencies": {
