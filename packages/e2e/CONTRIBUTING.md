@@ -13,5 +13,6 @@ yarn
 Run tests:
 
 ```
+yarn build
 yarn test
 ```

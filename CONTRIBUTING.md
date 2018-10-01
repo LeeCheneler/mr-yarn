@@ -28,6 +28,8 @@ yarn lint
 
 Run all tests:
 
+**Ensure that you build before running the integration tests**
+
 ```
 yarn test
 ```
