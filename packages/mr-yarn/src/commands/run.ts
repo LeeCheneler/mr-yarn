@@ -1,6 +1,7 @@
 import { exec } from 'child_process'
 const colors = require('colors/safe') // tslint:disable-line
 import { Argv } from 'yargs'
+import { extractForwardedOptions } from '../args'
 import { createLogger, defaultLogger } from '../logger'
 import { findWorkspacesByName, loadWorkspaces } from '../workspaces'
 
@@ -59,11 +60,7 @@ export const run = async (options: IRunOptions) => {
      * Find '--' which denotes the start of options to forward
      * Then grab everything after it
      */
-    let forwardedOptions = ''
-    const forwardOptionsFlagIndex = process.argv.indexOf('--')
-    if (forwardOptionsFlagIndex > -1 && process.argv.length > forwardOptionsFlagIndex + 2) {
-      forwardedOptions = process.argv.slice(forwardOptionsFlagIndex + 1).join(' ')
-    }
+    const forwardedOptions = extractForwardedOptions(process.argv);
 
     /**
      * Execute script in every workspace in parallel
