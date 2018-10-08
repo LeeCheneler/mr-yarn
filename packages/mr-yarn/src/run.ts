@@ -2,7 +2,6 @@ import * as yargs from 'yargs'
 import { applyAddCommand } from './commands/add'
 import { applyRemoveCommand } from './commands/remove'
 import { applyRunCommand } from './commands/run'
-import { defaultLogger } from './logger'
 
 export interface IRunOptions {
   configFilename: string
@@ -10,30 +9,26 @@ export interface IRunOptions {
 }
 
 export const run = async ({ configFilename, cwd }: IRunOptions) => {
-  try {
-    /**
-     * Configure global switches
-     */
-    let yargv = yargs.option('w', {
-      alias: 'workspaces',
-      describe: 'Filter by workspace names. Defaults to all when option not present.'
-    })
+  /**
+   * Configure global switches
+   */
+  let yargv = yargs.option('w', {
+    alias: 'workspaces',
+    describe: 'Filter by workspace names. Defaults to all when option not present.'
+  })
 
-    /**
-     * Apply commands
-     */
-    yargv = applyAddCommand(yargv, { configFilename, cwd })
-    yargv = applyRunCommand(yargv, { configFilename, cwd })
-    yargv = applyRemoveCommand(yargv, { configFilename, cwd })
+  /**
+   * Apply commands
+   */
+  yargv = applyAddCommand(yargv, { configFilename, cwd })
+  yargv = applyRunCommand(yargv, { configFilename, cwd })
+  yargv = applyRemoveCommand(yargv, { configFilename, cwd })
 
-    /**
-     * Run CLI
-     */
-    yargv
-      .help()
-      .version()
-      .parse()
-  } catch (error) {
-    defaultLogger.error(error)
-  }
+  /**
+   * Run CLI
+   */
+  yargv
+    .help()
+    .version()
+    .parse()
 }

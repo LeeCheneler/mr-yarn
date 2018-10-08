@@ -35,11 +35,11 @@ describe('run command', () => {
   })
 
   it('should run the script in filtered workspaces', async () => {
-      const { stdout } = await exec('mr run hello -w workspace-one,workspace-two', { cwd })
+    const { stdout } = await exec('mr run hello -w workspace-one,workspace-two', { cwd })
 
-      expect(stdout.includes('hello from workspace-one')).toBe(true)
-      expect(stdout.includes('hello from workspace-two')).toBe(true)
-      expect(stdout.includes('hello from workspace-three')).toBe(false)
+    expect(stdout.includes('hello from workspace-one')).toBe(true)
+    expect(stdout.includes('hello from workspace-two')).toBe(true)
+    expect(stdout.includes('hello from workspace-three')).toBe(false)
   })
 
   it('should forward args following --', async () => {
@@ -48,5 +48,14 @@ describe('run command', () => {
     const matches = stdout.match(/yarn hello --switch world/g) || []
 
     expect(matches.length).toBe(3)
+  })
+
+  it('should exit with code 1 if script exits with non-zero exit code', async () => {
+    expect.assertions(1)
+    try {
+      await exec('mr run -w workspace-one fail', { cwd })
+    } catch ({ code }) {
+      expect(code).toBe(1)
+    }
   })
 })

@@ -46,10 +46,7 @@ export const add = async (options: IAddOptions) => {
      */
     const npmPackages = packages.filter(p => !monoRepoWorkspaces.find(w => w.name === p))
     if (npmPackages.length > 0) {
-      defaultLogger.info(
-        `Adding ${options.dev ? 'dev ' : ''}dependencies from NPM [${npmPackages
-          .join(',')}]`
-      )
+      defaultLogger.info(`Adding ${options.dev ? 'dev ' : ''}dependencies from NPM [${npmPackages.join(',')}]`)
     }
 
     /**
@@ -68,14 +65,9 @@ export const add = async (options: IAddOptions) => {
     if (npmPackages.length > 0) {
       for (const targetWorkspace of targetWorkspaces) {
         try {
-          await exec(
-            `yarn add ${npmPackages.map(p => p).join(' ')} ${
-              options.dev ? '--dev' : ''
-            }`,
-            {
-              cwd: targetWorkspace.__workspaceDir
-            }
-          )
+          await exec(`yarn add ${npmPackages.map(p => p).join(' ')} ${options.dev ? '--dev' : ''}`, {
+            cwd: targetWorkspace.__workspaceDir
+          })
         } catch (err) {
           defaultLogger.warn(err)
         }

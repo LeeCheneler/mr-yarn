@@ -60,7 +60,7 @@ export const run = async (options: IRunOptions) => {
      * Find '--' which denotes the start of options to forward
      * Then grab everything after it
      */
-    const forwardedOptions = extractForwardedOptions(process.argv);
+    const forwardedOptions = extractForwardedOptions(process.argv)
 
     /**
      * Execute script in every workspace in parallel
@@ -85,8 +85,14 @@ export const run = async (options: IRunOptions) => {
         /**
          *  Resolve promise only once the child process has closed
          */
-        return new Promise(resolve => {
-          runner.on('close', resolve)
+        return new Promise((resolve, reject) => {
+          runner.on('exit', code => {
+            if (code) {
+              reject(`Script exited with code ${code}`)
+            } else {
+              resolve()
+            }
+          })
         })
       })
     )
@@ -94,6 +100,7 @@ export const run = async (options: IRunOptions) => {
     defaultLogger.info('Done 🎉')
   } catch (error) {
     defaultLogger.error(error)
+    process.exit(1)
   }
 }
 

@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "hello": "echo 'hello from workspace-one'",
-    "world": "yarn hello"
+    "world": "yarn hello",
+    "fail": "exit 1"
   }
 }
