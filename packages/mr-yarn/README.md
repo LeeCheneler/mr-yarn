@@ -12,7 +12,7 @@ It isn't designed to do anything Yarn can't do. It simply optimizes your mono re
 # Install globally
 yarn global add mr-yarn
 
-# Verify installtion
+# Verify installation
 mr --version
 ```
 
