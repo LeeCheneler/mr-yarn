@@ -32,7 +32,6 @@ mr add -D webpack
 
 # Filter workspaces
 mr add --workspaces workspace-one yargs
-mr add --workspaces workspace-one yargs
 mr add -w workspace-one yargs
 ```
 
@@ -74,11 +73,11 @@ You can use a comma seperated list with the workspaces flag.
 ```bash
 # A single filtered workspace
 mr add --workspaces workspace-one yargs
-mr add --workspaces workspace-one yargs
+mr add --w workspace-one yargs
 
 # Multiple filtered workspaces
 mr add --workspaces workspace-one,workspace-two yargs
-mr add --workspaces workspace-one,workspace-two yargs
+mr add --w workspace-one,workspace-two yargs
 ```
 
 ## CLI
