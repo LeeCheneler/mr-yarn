@@ -4,21 +4,23 @@
 
 Mr Yarn is a mono repository utility tool specifically for mono repositories powered by [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/).
 
+It isn't designed to do anything Yarn can't do. It simply optimizes your mono repo workflow by allowing you to perform common actions like installing dependencies and running scripts across multiple workspaces (packages) in a single command.
+
 ## Installation
 
 ```bash
+# Install globally
 yarn global add mr-yarn
-```
 
-## Getting Started
-
-Check Mr Yarn's version:
-
-```bash
+# Verify installtion
 mr --version
 ```
 
-Add dependencies:
+## Commands
+
+### `add`
+
+Add dependencies to workspaces. Mr Yarn will automatically detect any dependencies that are local workspaces and add those too!
 
 ```bash
 # Dependencies
@@ -30,45 +32,66 @@ mr add -D webpack
 
 # Filter workspaces
 mr add --workspaces workspace-one yargs
+mr add --workspaces workspace-one yargs
 mr add -w workspace-one yargs
 ```
 
-Run an NPM script:
+### `remove`
+
+Remove dependencies from workspaces.
+
+```bash
+# Dependencies
+mr remove react react-dom
+
+# Filter workspaces
+mr remove --workspaces workspace-one yargs
+mr remove -w workspace-one yargs
+```
+
+### `run`
+
+Run NPM scripts in workspaces.
+
+**Currently all scripts are run in parallel all the time.**
 
 ```bash
 # No args
 mr run start
 
-# With args '--proxy localhost:8080'
-mr run start -- --proxy localhost:8080
+# With args 'webpack-dev-server --hot'
+mr run start -- --hot
 
 # Filter workspaces
 mr run --workspaces workspace-one start
 mr run -w workspace-one start
 ```
 
-## Commands
+## Filtering workspaces
 
-| Command | Description                     | Supported Switches     |
-| ------- | ------------------------------- | ---------------------- |
-| Add     | Add dependencies to workspaces  | `--dev` `--workspaces` |
-| Run     | Run an NPM script in workspaces | `--workspaces` `--`    |
+You can use a comma seperated list with the workspaces flag.
 
-## Switches
+```bash
+# A single filtered workspace
+mr add --workspaces workspace-one yargs
+mr add --workspaces workspace-one yargs
 
-| Switch         | Alt  | Descirption                                                                     |
-| -------------- | ---- | ------------------------------------------------------------------------------- |
-| `--`           |      | Forwards the arguments following it onto the. Must be at the end of the command |
-| `--dev`        | `-D` | Install dependencies as dev dependencies                                        |
-| `--version`    |      | Outputs the version of Mr Yarn when no command is used                          |
-| `--workspaces` | `-w` | Filter the command to only the specified workspaces                             |
+# Multiple filtered workspaces
+mr add --workspaces workspace-one,workspace-two yargs
+mr add --workspaces workspace-one,workspace-two yargs
+```
 
-## Verified to work against
+## CLI
 
-|      | Version |
-| ---- | ------- |
-| Yarn | 1.7.0   |
-| Node | 8.11.3  |
+Other useful options:
+
+```bash
+# Display help including commands and their options
+mr --help
+
+# Display Mr Yarn's version
+mr --version
+```
 
 ## FAQ 🤔
 

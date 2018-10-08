@@ -1,7 +1,7 @@
 {
   "name": "mr-yarn",
   "description": "Yarn Workspaces mono repo utility",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "repository": "git@github.com:leecheneler/mr-yarn.git",
   "author": "leecheneler",
   "license": "MIT",
