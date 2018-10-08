@@ -5,6 +5,13 @@
   "repository": "git@github.com:leecheneler/mr-yarn.git",
   "author": "leecheneler",
   "license": "MIT",
+  "keywords": [
+    "yarn",
+    "cli",
+    "multi-package",
+    "monorepo",
+    "workspaces"
+  ],
   "bin": {
     "mr": "./bin/mr.js"
   },
