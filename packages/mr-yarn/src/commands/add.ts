@@ -1,8 +1,6 @@
 import { readJson, writeJson } from 'fs-extra'
 import { resolve } from 'path'
-const semverRegex: () => RegExp = require('semver-regex') // tslint:disable-line
 import { Argv } from 'yargs'
-const validateNPMPackageName = require('validate-npm-package-name') // tslint:disable-line
 import { exec } from '../exec'
 import { defaultLogger } from '../logger'
 import { findWorkspacesByName, loadWorkspaces } from '../workspaces'
@@ -18,12 +16,6 @@ interface IAddOptions {
   dev: boolean
   packages: string[]
   workspaceSwitch: string
-}
-
-interface IParsedPackage {
-  atVersion: string
-  name: string
-  version?: string
 }
 
 /**
@@ -47,45 +39,15 @@ export const add = async (options: IAddOptions) => {
 
     defaultLogger.info(`Target workspaces [${targetWorkspaces.map(w => `'${w.name}'`).join(',')}]`)
 
-    /**
-     *  Breakdown packages into meaningful parts
-     */
-    const packages = options.packages.map(p => {
-      const [name, version] = p.split('@')
-
-      return {
-        atVersion: version ? `@${version}` : '', // used to simplify conditional name/version concat
-        name,
-        version
-      }
-    })
-
-    /**
-     * Assert the validity if the name and version parts
-     */
-    const invalidPackages = packages.filter(({ name, version }) => {
-      const isNameValid = validateNPMPackageName(`${name}`).validForNewPackages
-      const isVersionValid = version ? semverRegex().test(version) : true
-
-      return !isNameValid || !isVersionValid
-    })
-
-    if (invalidPackages.length > 0) {
-      throw new Error(
-        `Following packages are invalid: [${invalidPackages
-          .map(({ name, atVersion }) => `'${name}${atVersion}'`)
-          .join(',')}]`
-      )
-    }
+    const packages = options.packages
 
     /**
      * Determine packages to install from NPM
      */
-    const npmPackages = packages.filter((p: IParsedPackage) => !monoRepoWorkspaces.find(w => w.name === p.name))
+    const npmPackages = packages.filter(p => !monoRepoWorkspaces.find(w => w.name === p))
     if (npmPackages.length > 0) {
       defaultLogger.info(
         `Adding ${options.dev ? 'dev ' : ''}dependencies from NPM [${npmPackages
-          .map(({ atVersion, name }) => `'${name}${atVersion}'`)
           .join(',')}]`
       )
     }
@@ -93,12 +55,10 @@ export const add = async (options: IAddOptions) => {
     /**
      * Determine packages to install from workspaces
      */
-    const workspacePackages = packages.filter((p: IParsedPackage) => monoRepoWorkspaces.find(w => w.name === p.name))
+    const workspacePackages = packages.filter(p => monoRepoWorkspaces.find(w => w.name === p))
     if (workspacePackages.length > 0) {
       defaultLogger.info(
-        `Adding ${options.dev ? 'dev ' : ''}dependencies from workspaces [${workspacePackages
-          .map(({ atVersion, name }) => `'${name}${atVersion}'`)
-          .join(',')}]`
+        `Adding ${options.dev ? 'dev ' : ''}dependencies from workspaces [${workspacePackages.join(',')}]`
       )
     }
 
@@ -109,7 +69,7 @@ export const add = async (options: IAddOptions) => {
       for (const targetWorkspace of targetWorkspaces) {
         try {
           await exec(
-            `yarn add ${npmPackages.map(({ atVersion, name }) => `'${name}${atVersion}'`).join(' ')} ${
+            `yarn add ${npmPackages.map(p => p).join(' ')} ${
               options.dev ? '--dev' : ''
             }`,
             {
@@ -137,7 +97,7 @@ export const add = async (options: IAddOptions) => {
           const dependencyKey = options.dev ? 'devDependencies' : 'dependencies'
 
           workspacePackages.forEach(p => {
-            const installWorkspace = monoRepoWorkspaces.find(w => w.name === p.name)
+            const installWorkspace = monoRepoWorkspaces.find(w => w.name === p)
             /**
              * Don't install into self
              */

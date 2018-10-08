@@ -10,7 +10,7 @@
     "clean:coverage": "rm -rf packages/**/coverage",
     "clean:node_modules": "rm -rf packages/**/node_modules && rm -rf node_modules",
     "lint": "tslint -c tslint.json 'packages/**/src/**/*.ts'",
-    "test": "mr run test"
+    "test": "mr run build -w mr-yarn && mr run test"
   },
   "husky": {
     "hooks": {

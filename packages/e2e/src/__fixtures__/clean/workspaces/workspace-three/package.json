@@ -1,0 +1,9 @@
+{
+  "name": "workspace-three",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "hello": "echo 'hello from workspace-three'",
+    "world": "yarn hello"
+  }
+}

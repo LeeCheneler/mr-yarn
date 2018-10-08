@@ -6,8 +6,8 @@ import { exec } from '../utils'
  */
 const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
 
-it('Should print an errors', async () => {
+it('Errors thrown by mr yarn should be piped stdout', async () => {
   const { stdout } = await exec('mr add deep-freeze', { cwd: resolve(fixturesDir, 'invalid') })
 
-  expect(stdout).toMatchSnapshot()
+  expect(stdout.includes(`Missing { "private": true } in 'package.json'`)).toBeTruthy()
 })

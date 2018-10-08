@@ -31,11 +31,22 @@ describe('run command', () => {
 
     expect(stdout.includes('hello from workspace-one')).toBe(true)
     expect(stdout.includes('hello from workspace-two')).toBe(true)
+    expect(stdout.includes('hello from workspace-three')).toBe(true)
+  })
+
+  it('should run the script in filtered workspaces', async () => {
+      const { stdout } = await exec('mr run hello -w workspace-one,workspace-two', { cwd })
+
+      expect(stdout.includes('hello from workspace-one')).toBe(true)
+      expect(stdout.includes('hello from workspace-two')).toBe(true)
+      expect(stdout.includes('hello from workspace-three')).toBe(false)
   })
 
   it('should forward args following --', async () => {
     const { stdout } = await exec('mr run world -- --switch world', { cwd })
 
-    expect(stdout.split('yarn hello --switch world').length).toBe(3)
+    const matches = stdout.match(/yarn hello --switch world/g) || []
+
+    expect(matches.length).toBe(3)
   })
 })

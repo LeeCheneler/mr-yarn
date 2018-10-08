@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`add command validate packages to install should not perform an install if any packages are incorrectly formatted and should output invalid packages provided 1`] = `
-"[35mMr Yarn[39m [32minfo[39m: Target workspaces ['workspace-one','workspace-two']
-[35mMr Yarn[39m [31merror[39m: Following packages are invalid: ['react@a16.5.0','excited!','what:bad']
-"
-`;
