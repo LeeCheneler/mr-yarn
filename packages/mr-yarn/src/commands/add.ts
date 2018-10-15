@@ -102,7 +102,8 @@ export const add = async (
 
     defaultLogger.info('Done 🎉')
   } catch (error) {
-    defaultLogger.error(error)
+      defaultLogger.error(`Something unexpectedly failed.` )
+      defaultLogger.error(error)
   }
 }
 

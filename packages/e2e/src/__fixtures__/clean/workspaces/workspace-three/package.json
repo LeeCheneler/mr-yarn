@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "hello": "echo 'hello from workspace-three'",
-    "world": "yarn hello"
+    "world": "yarn hello",
+    "sleep-or-fail": "sleep 1 && echo run-workspace-three"
   }
 }

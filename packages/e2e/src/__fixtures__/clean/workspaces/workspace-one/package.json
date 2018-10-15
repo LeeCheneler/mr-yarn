@@ -6,6 +6,7 @@
     "hello": "echo 'hello from workspace-one'",
     "world": "yarn hello",
     "fail": "exit 1",
-    "script-in-workspace-one-workspace-two": "echo run-workspace-one"
+    "script-in-workspace-one-workspace-two": "echo run-workspace-one",
+    "sleep-or-fail": "exit 1"
   }
 }

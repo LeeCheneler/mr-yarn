@@ -27,7 +27,8 @@ export const remove = async (packages: string[], getTargetWorkspaces: () => Prom
 
     defaultLogger.info('Done 🎉')
   } catch (error) {
-    defaultLogger.error(error)
+      defaultLogger.error(`Something unexpectedly failed.` )
+      defaultLogger.error(error)
   }
 }
 

@@ -43,8 +43,9 @@ export const run = async (script: string, getTargetWorkspaces: () => Promise<IWo
     /**
      * Execute script in every workspace in parallel
      */
-    await Promise.all(
-      targetWorkspaces.filter(w => w.scripts && w.scripts[script]).map(async workspace => {
+    const results: Array<{code: number, workspace: IWorkspace}> = await Promise.all(
+      targetWorkspaces.filter(w => w.scripts && w.scripts[script])
+          .map(async workspace => {
         const runner = exec(`yarn ${script} ${forwardedOptions}`, { cwd: workspace.__workspaceDir })
 
         /**
@@ -63,20 +64,27 @@ export const run = async (script: string, getTargetWorkspaces: () => Promise<IWo
         /**
          *  Resolve promise only once the child process has closed
          */
-        return new Promise((resolve, reject) => {
+        return new Promise<{code: number, workspace: IWorkspace}>((resolve) => {
           runner.on('exit', code => {
-            if (code) {
-              reject(`Script exited with code ${code}`)
-            } else {
-              resolve()
-            }
+            resolve({code, workspace})
           })
         })
       })
     )
 
+    for(const {code, workspace} of results) {
+        if(code > 1) {
+            defaultLogger.error(`Script ${script} in ${workspace.name} exited with error code ${code}.` )
+        }
+    }
+
+    if(results.find(({code}) => code > 0)) {
+        process.exit(1)
+    }
+
     defaultLogger.info('Done 🎉')
   } catch (error) {
+    defaultLogger.error(`Something unexpectedly failed.` )
     defaultLogger.error(error)
     process.exit(1)
   }
