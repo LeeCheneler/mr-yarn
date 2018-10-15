@@ -65,4 +65,16 @@ describe('run command', () => {
     expect(stdout.includes('run-workspace-one')).toBe(true)
     expect(stdout.includes('run-workspace-two')).toBe(true)
   })
+
+  it('should complete execution of all scripts even if some fail', async () => {
+      expect.assertions(3)
+
+      try {
+          await exec('mr run sleep-or-fail', { cwd })
+      } catch ({ stdout, code }) {
+          expect(stdout.includes(': run-workspace-two')).toBe(true)
+          expect(stdout.includes(': run-workspace-three')).toBe(true)
+          expect(code).toBe(1)
+      }
+  })
 })

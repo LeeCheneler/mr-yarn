@@ -5,6 +5,7 @@
   "scripts": {
     "hello": "echo 'hello from workspace-two'",
     "world": "yarn hello",
-    "script-in-workspace-one-workspace-two": "echo run-workspace-two"
+    "script-in-workspace-one-workspace-two": "echo run-workspace-two",
+    "sleep-or-fail": "sleep 1 && echo run-workspace-two"
   }
 }
