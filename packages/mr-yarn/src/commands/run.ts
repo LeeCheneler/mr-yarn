@@ -20,7 +20,7 @@ interface IRunOptions {
 const getRandomColor = () => {
   const shellColors = [
     // 'black', // most terminals are black
-    'red',
+    // 'red',
     'green',
     'yellow',
     // 'blue', // too dark
@@ -66,7 +66,7 @@ export const run = async (options: IRunOptions) => {
      * Execute script in every workspace in parallel
      */
     await Promise.all(
-      targetWorkspaces.map(async workspace => {
+      targetWorkspaces.filter(w => w.scripts && w.scripts[options.script]).map(async workspace => {
         const runner = exec(`yarn ${options.script} ${forwardedOptions}`, { cwd: workspace.__workspaceDir })
 
         /**

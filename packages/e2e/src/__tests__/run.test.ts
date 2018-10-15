@@ -58,4 +58,11 @@ describe('run command', () => {
       expect(code).toBe(1)
     }
   })
+
+  it('should only attempt to run a script if it exists in a workspace', async () => {
+    const { stdout } = await exec('mr run script-in-workspace-one-workspace-two', { cwd })
+
+    expect(stdout.includes('run-workspace-one')).toBe(true)
+    expect(stdout.includes('run-workspace-two')).toBe(true)
+  })
 })

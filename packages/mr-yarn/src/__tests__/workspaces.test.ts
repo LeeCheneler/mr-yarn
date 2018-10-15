@@ -15,12 +15,18 @@ describe('loadWorkspaces', () => {
         __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-one/package.json'),
         __workspaceDir: resolve(fixturesDir, 'valid/workspace-one'),
         name: 'workspace-one',
+        scripts: {
+          test: 'echo test-one'
+        },
         version: '1.0.0'
       },
       {
         __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-two/package.json'),
         __workspaceDir: resolve(fixturesDir, 'valid/workspace-two'),
         name: 'workspace-two',
+        scripts: {
+          test: 'echo test-two'
+        },
         version: '1.0.0'
       }
     ])

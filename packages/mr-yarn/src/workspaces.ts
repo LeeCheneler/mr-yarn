@@ -9,6 +9,7 @@ export interface IWorkspace {
   __workspaceDir: string
   name: string
   version: string
+  scripts?: { [s: string]: string }
 }
 
 /**
@@ -73,10 +74,9 @@ export const loadWorkspaces = async (dir: string, configFilename: string): Promi
       }
 
       return {
+        ...workspaceConfig,
         __workspaceConfigFilepath: filepath,
-        __workspaceDir: filepath.replace('/package.json', ''),
-        name: workspaceConfig.name,
-        version: workspaceConfig.version
+        __workspaceDir: filepath.replace('/package.json', '')
       }
     })
   )
