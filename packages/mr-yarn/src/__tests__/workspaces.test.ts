@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { findWorkspacesByName, loadWorkspaces } from '../workspaces'
+import { findWorkspacesByName, loadTargetWorkspaces, loadWorkspaces } from '../workspaces'
 
 /**
  * Fixtures directory containing variants of workspace setup to assert against
@@ -7,7 +7,7 @@ import { findWorkspacesByName, loadWorkspaces } from '../workspaces'
 const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
 
 describe('loadWorkspaces', () => {
-  it('should return the configuration of the mono repo', async () => {
+  it('should return configs of all workspaces in monorepo', async () => {
     const workspaces = await loadWorkspaces(fixturesDir, 'valid.json')
 
     expect(workspaces).toMatchObject([
@@ -74,6 +74,49 @@ describe('loadWorkspaces', () => {
     await expect(loadWorkspaces(fixturesDir, 'noWorkspaces.json')).rejects.toEqual(
       new Error(`Could not locate any workspaces`)
     )
+  })
+})
+
+describe('loadTargetWorkspaces', () => {
+  it('should return configs of all workspaces in monorepo when no filter string is provided', async () => {
+    const workspaces = await loadTargetWorkspaces(null, fixturesDir, 'valid.json')
+
+    expect(workspaces).toMatchObject([
+      {
+        __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-one/package.json'),
+        __workspaceDir: resolve(fixturesDir, 'valid/workspace-one'),
+        name: 'workspace-one',
+        scripts: {
+          test: 'echo test-one'
+        },
+        version: '1.0.0'
+      },
+      {
+        __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-two/package.json'),
+        __workspaceDir: resolve(fixturesDir, 'valid/workspace-two'),
+        name: 'workspace-two',
+        scripts: {
+          test: 'echo test-two'
+        },
+        version: '1.0.0'
+      }
+    ])
+  })
+
+  it('should return configs of workspaces according to filter string', async () => {
+    const workspaces = await loadTargetWorkspaces('workspace-one', fixturesDir, 'valid.json')
+
+    expect(workspaces).toMatchObject([
+      {
+        __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-one/package.json'),
+        __workspaceDir: resolve(fixturesDir, 'valid/workspace-one'),
+        name: 'workspace-one',
+        scripts: {
+          test: 'echo test-one'
+        },
+        version: '1.0.0'
+      }
+    ])
   })
 })
 

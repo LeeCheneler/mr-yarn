@@ -3,4 +3,4 @@
 const { resolve } = require('path')
 const { run } = require('../.build/run')
 
-run({ configFilename: 'package.json', cwd: process.cwd() })
+run('package.json', process.cwd())

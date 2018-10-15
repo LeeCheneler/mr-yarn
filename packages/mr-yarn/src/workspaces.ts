@@ -15,22 +15,22 @@ export interface IWorkspace {
 /**
  * Load workspaces based on mono repo config.
  * Also validates mono repo's config once it has read it.
- * @param dir Directory to search for mono repo's config file
+ * @param cwd Directory to search for mono repo's config file
  * @param configFilename Mono repo config file name (eg. package.json)
  */
-export const loadWorkspaces = async (dir: string, configFilename: string): Promise<IWorkspace[]> => {
+export const loadWorkspaces = async (cwd: string, configFilename: string): Promise<IWorkspace[]> => {
   let config
 
   /**
    * Load mono repo's config
    */
   try {
-    config = await readJson(resolve(dir, configFilename))
+    config = await readJson(resolve(cwd, configFilename))
   } catch (error) {
     defaultLogger.error(error)
     throw new Error(
       `Unable to locate '${resolve(
-        dir,
+        cwd,
         configFilename
       )}'. Ensure you run this tool in the same directory as the '${configFilename}' containing Yarn Workspaces config.`
     )
@@ -54,7 +54,7 @@ export const loadWorkspaces = async (dir: string, configFilename: string): Promi
   /**
    * Load each workspace's config
    */
-  const workspaceConfigGlobs = (config.workspaces as string[]).map(g => resolve(dir, g, 'package.json'))
+  const workspaceConfigGlobs = (config.workspaces as string[]).map(g => resolve(cwd, g, 'package.json'))
   const workspaceConfigFilepaths = (await Promise.all(workspaceConfigGlobs.map(g => glob(g)))).reduce(
     (acc, next) => [...acc, ...next],
     []
@@ -86,6 +86,26 @@ export const loadWorkspaces = async (dir: string, configFilename: string): Promi
   }
 
   return workspaceConfigs
+}
+
+/**
+ * Load target workspaces according to filter string
+ * @param workspacesFilter
+ */
+export const loadTargetWorkspaces = async (
+  workspacesFilter: string | null,
+  cwd: string,
+  configFilename: string
+): Promise<IWorkspace[]> => {
+  /**
+   * Load all workspaces in the mono repo
+   */
+  const monoRepoWorkspaces = await loadWorkspaces(cwd, configFilename)
+
+  /**
+   * Determine target workspaces
+   */
+  return findWorkspacesByName(monoRepoWorkspaces, workspacesFilter ? workspacesFilter.split(',') : [])
 }
 
 /**
