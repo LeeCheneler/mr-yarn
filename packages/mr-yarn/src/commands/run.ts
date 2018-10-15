@@ -3,24 +3,12 @@ const colors = require('colors/safe') // tslint:disable-line
 import { Argv } from 'yargs'
 import { extractForwardedOptions } from '../args'
 import { createLogger, defaultLogger } from '../logger'
-import { findWorkspacesByName, loadWorkspaces } from '../workspaces'
-
-interface IRunCommandOptions {
-  configFilename: string
-  cwd: string
-}
-
-interface IRunOptions {
-  configFilename: string
-  cwd: string
-  script: string
-  workspaceSwitch: string
-}
+import { IWorkspace, loadTargetWorkspaces } from '../workspaces'
 
 const getRandomColor = () => {
   const shellColors = [
     // 'black', // most terminals are black
-    'red',
+    // 'red',
     'green',
     'yellow',
     // 'blue', // too dark
@@ -36,23 +24,13 @@ const getRandomColor = () => {
 
 /**
  * Run NPM script in workspaces
- * @param options
  */
-export const run = async (options: IRunOptions) => {
+export const run = async (script: string, getTargetWorkspaces: () => Promise<IWorkspace[]>) => {
   try {
     /**
-     * Load all workspaces in the mono repo
+     * Load target workspaces
      */
-    const monoRepoWorkspaces = await loadWorkspaces(options.cwd, options.configFilename)
-
-    /**
-     * Determine target workspaces
-     */
-    const targetWorkspaces = await findWorkspacesByName(
-      monoRepoWorkspaces,
-      options.workspaceSwitch ? options.workspaceSwitch.split(',') : []
-    )
-
+    const targetWorkspaces = await getTargetWorkspaces()
     defaultLogger.info(`Target workspaces [${targetWorkspaces.map(w => `'${w.name}'`).join(',')}]`)
 
     /**
@@ -66,8 +44,8 @@ export const run = async (options: IRunOptions) => {
      * Execute script in every workspace in parallel
      */
     await Promise.all(
-      targetWorkspaces.map(async workspace => {
-        const runner = exec(`yarn ${options.script} ${forwardedOptions}`, { cwd: workspace.__workspaceDir })
+      targetWorkspaces.filter(w => w.scripts && w.scripts[script]).map(async workspace => {
+        const runner = exec(`yarn ${script} ${forwardedOptions}`, { cwd: workspace.__workspaceDir })
 
         /**
          * Report progress on the fly every time a log comes out
@@ -108,16 +86,12 @@ export const run = async (options: IRunOptions) => {
  * Apply the 'run' command to the yargs CLI
  * @param yargv Instance of yargs CLI
  */
-export const applyRunCommand = (argv: Argv, options: IRunCommandOptions) =>
+export const applyRunCommand = (argv: Argv, cwd: string, configFilename: string) =>
   argv.command(
     'run <script> [options...]',
     'Run NPM script in workspaces',
     yargs => yargs,
     args => {
-      run({
-        ...options,
-        script: args.script,
-        workspaceSwitch: args.workspaces
-      })
+      run(args.script, () => loadTargetWorkspaces(args.workspaces, cwd, configFilename))
     }
   )

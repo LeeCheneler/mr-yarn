@@ -3,50 +3,36 @@ import { resolve } from 'path'
 import { Argv } from 'yargs'
 import { exec } from '../exec'
 import { defaultLogger } from '../logger'
-import { findWorkspacesByName, loadWorkspaces } from '../workspaces'
-
-interface IAddCommandOptions {
-  configFilename: string
-  cwd: string
-}
-
-interface IAddOptions {
-  configFilename: string
-  cwd: string
-  dev: boolean
-  packages: string[]
-  workspaceSwitch: string
-}
+import { IWorkspace, loadTargetWorkspaces, loadWorkspaces } from '../workspaces'
 
 /**
  * Add dependencies to workspaces
- * @param options
  */
-export const add = async (options: IAddOptions) => {
+export const add = async (
+  packages: string[],
+  dev: boolean,
+  getTargetWorkspaces: () => Promise<IWorkspace[]>,
+  getMonoRepoWorkspaces: () => Promise<IWorkspace[]>,
+  cwd: string
+) => {
   try {
     /**
      * Load all workspaces in the mono repo
      */
-    const monoRepoWorkspaces = await loadWorkspaces(options.cwd, options.configFilename)
+    const monoRepoWorkspaces = await getMonoRepoWorkspaces()
 
     /**
      * Determine target workspaces
      */
-    const targetWorkspaces = await findWorkspacesByName(
-      monoRepoWorkspaces,
-      options.workspaceSwitch ? options.workspaceSwitch.split(',') : []
-    )
-
+    const targetWorkspaces = await getTargetWorkspaces()
     defaultLogger.info(`Target workspaces [${targetWorkspaces.map(w => `'${w.name}'`).join(',')}]`)
-
-    const packages = options.packages
 
     /**
      * Determine packages to install from NPM
      */
     const npmPackages = packages.filter(p => !monoRepoWorkspaces.find(w => w.name === p))
     if (npmPackages.length > 0) {
-      defaultLogger.info(`Adding ${options.dev ? 'dev ' : ''}dependencies from NPM [${npmPackages.join(',')}]`)
+      defaultLogger.info(`Adding ${dev ? 'dev ' : ''}dependencies from NPM [${npmPackages.join(',')}]`)
     }
 
     /**
@@ -54,9 +40,7 @@ export const add = async (options: IAddOptions) => {
      */
     const workspacePackages = packages.filter(p => monoRepoWorkspaces.find(w => w.name === p))
     if (workspacePackages.length > 0) {
-      defaultLogger.info(
-        `Adding ${options.dev ? 'dev ' : ''}dependencies from workspaces [${workspacePackages.join(',')}]`
-      )
+      defaultLogger.info(`Adding ${dev ? 'dev ' : ''}dependencies from workspaces [${workspacePackages.join(',')}]`)
     }
 
     /**
@@ -65,7 +49,7 @@ export const add = async (options: IAddOptions) => {
     if (npmPackages.length > 0) {
       for (const targetWorkspace of targetWorkspaces) {
         try {
-          await exec(`yarn add ${npmPackages.map(p => p).join(' ')} ${options.dev ? '--dev' : ''}`, {
+          await exec(`yarn add ${npmPackages.map(p => p).join(' ')} ${dev ? '--dev' : ''}`, {
             cwd: targetWorkspace.__workspaceDir
           })
         } catch (err) {
@@ -86,7 +70,7 @@ export const add = async (options: IAddOptions) => {
         targetWorkspaces.map(async targetWorkspace => {
           const packageJsonFilepath = resolve(targetWorkspace.__workspaceDir, 'package.json')
           const packageJson = await readJson(packageJsonFilepath)
-          const dependencyKey = options.dev ? 'devDependencies' : 'dependencies'
+          const dependencyKey = dev ? 'devDependencies' : 'dependencies'
 
           workspacePackages.forEach(p => {
             const installWorkspace = monoRepoWorkspaces.find(w => w.name === p)
@@ -110,7 +94,7 @@ export const add = async (options: IAddOptions) => {
        * Now install
        */
       try {
-        await exec('yarn install', { cwd: options.cwd })
+        await exec('yarn install', { cwd })
       } catch (err) {
         defaultLogger.warn(err)
       }
@@ -126,7 +110,7 @@ export const add = async (options: IAddOptions) => {
  * Apply the 'add' command to the yargs CLI
  * @param yargv Instance of yargs CLI
  */
-export const applyAddCommand = (argv: Argv, options: IAddCommandOptions) =>
+export const applyAddCommand = (argv: Argv, cwd: string, configFilename: string) =>
   argv.command(
     'add [packages...]',
     'Add packages to workspaces',
@@ -138,11 +122,12 @@ export const applyAddCommand = (argv: Argv, options: IAddCommandOptions) =>
       })
     },
     args => {
-      add({
-        ...options,
-        dev: args.dev,
-        packages: args.packages,
-        workspaceSwitch: args.workspaces
-      })
+      add(
+        args.packages,
+        args.dev,
+        () => loadTargetWorkspaces(args.workspaces, cwd, configFilename),
+        () => loadWorkspaces(cwd, configFilename),
+        cwd
+      )
     }
   )
