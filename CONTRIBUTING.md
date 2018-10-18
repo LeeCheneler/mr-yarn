@@ -36,7 +36,7 @@ yarn test
 
 ## Helping hands
 
-Clean the repository of things such as build artefacts and node modules:
+Clean the repository of things such as build artifacts and node modules:
 
 ```
 yarn clean
