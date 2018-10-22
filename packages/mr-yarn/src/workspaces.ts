@@ -9,7 +9,7 @@ export interface IWorkspace {
   __workspaceDir: string
   name: string
   version: string
-  scripts?: { [s: string]: string }
+  scripts?: { [s: string]: string | undefined }
 }
 
 /**

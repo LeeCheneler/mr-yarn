@@ -77,4 +77,11 @@ describe('run command', () => {
           expect(code).toBe(1)
       }
   })
+
+  it('should run all scripts matching wildcard', async () => {
+      const { stdout } = await exec('mr run wildcard:*', { cwd })
+
+      expect(stdout.includes('hello from wildcard:one')).toBe(true)
+      expect(stdout.includes('hello from wildcard:two')).toBe(true)
+  })
 })
