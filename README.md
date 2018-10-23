@@ -1,5 +1,8 @@
 # Mr Yarn
 
+**It knits your workspaces together!**
+
+
 [![CircleCI](https://circleci.com/gh/LeeCheneler/mr-yarn.svg?style=svg)](https://circleci.com/gh/LeeCheneler/mr-yarn)
 
 Mr Yarn is a mono repository utility tool specifically for mono repositories powered by [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/).
@@ -60,6 +63,9 @@ mr run start
 
 # With args 'webpack-dev-server --hot'
 mr run start -- --hot
+
+# Wildcard support, run test:unit and test:e2e for example
+mr run test:*
 
 # Filter workspaces
 mr run --workspaces workspace-one start
