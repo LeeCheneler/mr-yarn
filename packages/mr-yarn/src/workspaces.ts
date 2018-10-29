@@ -102,27 +102,15 @@ export const loadTargetWorkspaces = async (
    */
   const monoRepoWorkspaces = await loadWorkspaces(cwd, configFilename)
 
-  /**
-   * Determine target workspaces
-   */
-  return findWorkspacesByName(monoRepoWorkspaces, workspacesFilter ? workspacesFilter.split(',') : [])
-}
-
-/**
- * Finds workspaces by name, if no names is provided then all workspaces are returned
- * @param workspaces Workspaces to search
- * @param names Names of workspaces to find
- */
-export const findWorkspacesByName = (workspaces: IWorkspace[], names: string[]) => {
-  if (names.length === 0) {
-    return workspaces
-  }
-
-  const targetWorkspaces = workspaces.filter(w => names.includes(w.name))
-
-  if (targetWorkspaces.length !== names.length) {
-    throw new Error('One or more specified workspaces do not exist')
-  }
-
-  return targetWorkspaces
+  return workspacesFilter
+    ? monoRepoWorkspaces.filter(workspace => {
+        const filters = workspacesFilter.split(',')
+        const matchedWildCard =
+          filters
+            .filter(f => f.includes('*'))
+            .map(f => f.split('*')[0])
+            .filter(f => workspace.name.startsWith(f)).length > 0
+        return matchedWildCard || filters.includes(workspace.name)
+      })
+    : monoRepoWorkspaces
 }
