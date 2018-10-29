@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { findWorkspacesByName, loadTargetWorkspaces, loadWorkspaces } from '../workspaces'
+import { loadTargetWorkspaces, loadWorkspaces } from '../workspaces'
 
 /**
  * Fixtures directory containing variants of workspace setup to assert against
@@ -103,7 +103,7 @@ describe('loadTargetWorkspaces', () => {
     ])
   })
 
-  it('should return configs of workspaces according to filter string', async () => {
+  it('should return config of a single workspace', async () => {
     const workspaces = await loadTargetWorkspaces('workspace-one', fixturesDir, 'valid.json')
 
     expect(workspaces).toMatchObject([
@@ -118,39 +118,45 @@ describe('loadTargetWorkspaces', () => {
       }
     ])
   })
-})
 
-describe('findWorkspacesByName', () => {
-  const workspaces = [
-    {
-      __workspaceConfigFilepath: '',
-      __workspaceDir: '',
-      name: 'one',
-      version: '1.0.0'
-    },
-    {
-      __workspaceConfigFilepath: '',
-      __workspaceDir: '',
-      name: 'two',
-      version: '1.0.0'
-    },
-    {
-      __workspaceConfigFilepath: '',
-      __workspaceDir: '',
-      name: 'three',
-      version: '1.0.0'
-    }
-  ]
+  it('should return config of comma seperated workspaces', async () => {
+    const workspaces = await loadTargetWorkspaces('workspace-one,workspace-two', fixturesDir, 'valid.json')
 
-  it('should return all workspaces no names are requested', () => {
-    expect(findWorkspacesByName(workspaces, [])).toMatchObject(workspaces)
+    expect(workspaces).toMatchObject([
+      {
+        __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-one/package.json'),
+        __workspaceDir: resolve(fixturesDir, 'valid/workspace-one'),
+        name: 'workspace-one',
+        scripts: {
+          test: 'echo test-one'
+        },
+        version: '1.0.0'
+      },
+      {
+        __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-two/package.json'),
+        __workspaceDir: resolve(fixturesDir, 'valid/workspace-two'),
+        name: 'workspace-two',
+        scripts: {
+          test: 'echo test-two'
+        },
+        version: '1.0.0'
+      }
+    ])
   })
 
-  it('should return filter workspaces by name', () => {
-    expect(findWorkspacesByName(workspaces, ['one', 'two'])).toMatchObject([workspaces[0], workspaces[1]])
-  })
+  it('should return configs of workspaces according to filter string using wildcard', async () => {
+    const workspaces = await loadTargetWorkspaces('workspace-o*', fixturesDir, 'valid.json')
 
-  it('should throw when the workspace does not exist', () => {
-    expect(() => findWorkspacesByName(workspaces, ['four'])).toThrow()
+    expect(workspaces).toMatchObject([
+      {
+        __workspaceConfigFilepath: resolve(fixturesDir, 'valid/workspace-one/package.json'),
+        __workspaceDir: resolve(fixturesDir, 'valid/workspace-one'),
+        name: 'workspace-one',
+        scripts: {
+          test: 'echo test-one'
+        },
+        version: '1.0.0'
+      }
+    ])
   })
 })

@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { exec } from '../utils'
+import { exec } from '../utils/exec'
 
 /**
  * Fixtures directory containing variants of workspace setup to assert against

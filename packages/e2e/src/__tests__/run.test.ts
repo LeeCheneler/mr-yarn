@@ -1,29 +1,9 @@
 import { copy, move, remove } from 'fs-extra'
 import { resolve } from 'path'
-import { exec } from '../utils'
+import { exec } from '../utils/exec'
+import { withMonoRepoFixture } from '../utils/fixtures'
 
-/**
- * Fixtures directory containing variants of workspace setup to assert against
- */
-const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
-
-/**
- * Create a bootstrap a temporary working directory
- */
-const cwd = resolve(fixturesDir, 'run-temp')
-
-beforeEach(async () => {
-  await copy(resolve(fixturesDir, 'clean'), cwd)
-  /**
-   * Clean mono repo doesn't contain a packahe.json because jest validates module names
-   * and will log a warning if 2 match which they would following the first copy
-   */
-  await move(resolve(cwd, 'package.json.copyme'), resolve(cwd, 'package.json'))
-})
-
-afterEach(async () => {
-  await remove(cwd)
-})
+const { cwd } = withMonoRepoFixture('run-mono-repo-fixture')
 
 describe('run command', () => {
   it('should run the script in every workspace', async () => {
@@ -32,14 +12,6 @@ describe('run command', () => {
     expect(stdout.includes('hello from workspace-one')).toBe(true)
     expect(stdout.includes('hello from workspace-two')).toBe(true)
     expect(stdout.includes('hello from workspace-three')).toBe(true)
-  })
-
-  it('should run the script in filtered workspaces', async () => {
-    const { stdout } = await exec('mr run hello -w workspace-one,workspace-two', { cwd })
-
-    expect(stdout.includes('hello from workspace-one')).toBe(true)
-    expect(stdout.includes('hello from workspace-two')).toBe(true)
-    expect(stdout.includes('hello from workspace-three')).toBe(false)
   })
 
   it('should forward args following --', async () => {
@@ -67,21 +39,21 @@ describe('run command', () => {
   })
 
   it('should complete execution of all scripts even if some fail', async () => {
-      expect.assertions(3)
+    expect.assertions(3)
 
-      try {
-          await exec('mr run sleep-or-fail', { cwd })
-      } catch ({ stdout, code }) {
-          expect(stdout.includes(': run-workspace-two')).toBe(true)
-          expect(stdout.includes(': run-workspace-three')).toBe(true)
-          expect(code).toBe(1)
-      }
+    try {
+      await exec('mr run sleep-or-fail', { cwd })
+    } catch ({ stdout, code }) {
+      expect(stdout.includes(': run-workspace-two')).toBe(true)
+      expect(stdout.includes(': run-workspace-three')).toBe(true)
+      expect(code).toBe(1)
+    }
   })
 
   it('should run all scripts matching wildcard', async () => {
-      const { stdout } = await exec('mr run wildcard:*', { cwd })
+    const { stdout } = await exec('mr run wildcard:*', { cwd })
 
-      expect(stdout.includes('hello from wildcard:one')).toBe(true)
-      expect(stdout.includes('hello from wildcard:two')).toBe(true)
+    expect(stdout.includes('hello from wildcard:one')).toBe(true)
+    expect(stdout.includes('hello from wildcard:two')).toBe(true)
   })
 })

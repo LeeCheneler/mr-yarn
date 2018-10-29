@@ -1,29 +1,9 @@
-import { copy, move, readJson, remove } from 'fs-extra'
+import { readJson } from 'fs-extra'
 import { resolve } from 'path'
-import { exec } from '../utils'
+import { exec } from '../utils/exec'
+import { withMonoRepoFixture } from '../utils/fixtures'
 
-/**
- * Fixtures directory containing variants of workspace setup to assert against
- */
-const fixturesDir = resolve(process.cwd(), 'src/__fixtures__')
-
-/**
- * Create a temporary working directory
- */
-const cwd = resolve(fixturesDir, 'add-temp')
-
-beforeEach(async () => {
-  await copy(resolve(fixturesDir, 'clean'), cwd)
-  /**
-   * Clean mono repo doesn't contain a package.json because jest validates module names
-   * and will log a warning if 2 match which they would following the first copy
-   */
-  await move(resolve(cwd, 'package.json.copyme'), resolve(cwd, 'package.json'))
-})
-
-afterEach(async () => {
-  await remove(cwd)
-})
+const { cwd } = withMonoRepoFixture('add-mono-repo-fixture')
 
 describe('add command', () => {
   describe('npm packages', () => {
@@ -44,16 +24,6 @@ describe('add command', () => {
 
       expect(workspaceOne.devDependencies['deep-freeze']).toBeTruthy()
       expect(workspaceTwo.devDependencies['deep-freeze']).toBeTruthy()
-    })
-
-    it('should add dependencies to filtered workspaces', async () => {
-      await exec('mr add deep-freeze --workspaces workspace-two', { cwd })
-
-      const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
-      const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
-
-      expect(workspaceOne.dependencies).toBe(undefined)
-      expect(workspaceTwo.dependencies['deep-freeze']).toBeTruthy()
     })
   })
 
@@ -78,27 +48,17 @@ describe('add command', () => {
       expect(workspaceTwo.devDependencies['workspace-one']).toBeTruthy()
     })
 
-    it('should add workspaces as dependencies to filtered workspaces', async () => {
-      await exec('mr add --workspaces workspace-two workspace-one', { cwd })
+    it('should not add workspaces as dependency to workspaces not matching filter', async () => {
+      await exec('mr add --workspaces workspace-three workspace-one', { cwd })
 
-        const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
-        const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
+      const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
+      const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
+      const workspaceThree = await readJson(resolve(cwd, 'workspaces/workspace-three/package.json'))
 
-        expect(workspaceOne.dependencies).toBe(undefined)
-        expect(workspaceTwo.dependencies['workspace-one']).toBeTruthy()
+      expect(workspaceOne.dependencies).toBe(undefined)
+      expect(workspaceTwo.dependencies).toBe(undefined)
+      expect(workspaceThree.dependencies['workspace-one']).toBe('1.0.0')
     })
-
-      it('should not add workspaces as dependency to workspaces not matching filter', async () => {
-          await exec('mr add --workspaces workspace-three workspace-one', { cwd })
-
-          const workspaceOne = await readJson(resolve(cwd, 'workspaces/workspace-one/package.json'))
-          const workspaceTwo = await readJson(resolve(cwd, 'workspaces/workspace-two/package.json'))
-          const workspaceThree = await readJson(resolve(cwd, 'workspaces/workspace-three/package.json'))
-
-          expect(workspaceOne.dependencies).toBe(undefined)
-          expect(workspaceTwo.dependencies).toBe(undefined)
-          expect(workspaceThree.dependencies['workspace-one']).toBe('1.0.0')
-      })
   })
 
   describe('adding existing packages', () => {
