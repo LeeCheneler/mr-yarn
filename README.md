@@ -2,7 +2,6 @@
 
 **It knits your workspaces together!**
 
-
 [![CircleCI](https://circleci.com/gh/LeeCheneler/mr-yarn.svg?style=svg)](https://circleci.com/gh/LeeCheneler/mr-yarn)
 
 Mr Yarn is a mono repository utility tool specifically for mono repositories powered by [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/).
@@ -84,6 +83,10 @@ mr add --w workspace-one yargs
 # Multiple filtered workspaces
 mr add --workspaces workspace-one,workspace-two yargs
 mr add --w workspace-one,workspace-two yargs
+
+# Filter including wildcard
+mr add --workspaces workspace-* yargs
+mr run --workspaces app-*,server-* start
 ```
 
 ## CLI

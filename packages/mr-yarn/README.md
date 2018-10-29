@@ -83,6 +83,10 @@ mr add --w workspace-one yargs
 # Multiple filtered workspaces
 mr add --workspaces workspace-one,workspace-two yargs
 mr add --w workspace-one,workspace-two yargs
+
+# Filter including wildcard
+mr add --workspaces workspace-* yargs
+mr run --workspaces app-*,server-* start
 ```
 
 ## CLI
